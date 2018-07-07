@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="colorPrimary">@color/white</color>
+  <color name="colorPrimaryDark">@color/blackpearl</color>
+  <color name="colorAccent">#4789EF</color>
+  <color name="colorNoteTitle">@color/lightblack</color>
+  <color name="colorNoteDescription">#333</color>
+  <color name="colorAppBackground">@color/ghostwhite</color>
+
+  <color name="white">#fff</color>
+  <color name="ghostwhite">#FDFDFE</color>
+  <color name="lightgray">#d3d3d3</color>
+  <color name="dimgray">#696969</color>
+  <color name="blackpearl">#202529</color>
+  <color name="lightblack">#1A1110</color>
+  <color name="black">#000</color>
+</resources>

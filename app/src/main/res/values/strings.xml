@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NoteIt</string>
+  <string name="fab_transition">fab_transition</string>
+  <string name="err_empty_note">Can not save an empty note</string>
+</resources>
