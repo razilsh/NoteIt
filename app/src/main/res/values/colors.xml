@@ -14,4 +14,5 @@
   <color name="blackpearl">#202529</color>
   <color name="lightblack">#1A1110</color>
   <color name="black">#000</color>
+  <color name="colorDivider">#4D000000</color>
 </resources>

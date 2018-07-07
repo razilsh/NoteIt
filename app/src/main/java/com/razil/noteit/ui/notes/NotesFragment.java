@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.razil.noteit.R;
-import com.razil.noteit.data.db.NoteEntity;
 import com.razil.noteit.util.InjectorUtils;
 
 /**
@@ -27,7 +25,7 @@ public class NotesFragment extends Fragment {
   Unbinder unbinder;
   @BindView(R.id.button_add_note) FloatingActionButton mAddNoteButton;
   @BindView(R.id.recyclerView_notes) RecyclerView mRecyclerView;
-  
+
   @Nullable @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -41,6 +39,14 @@ public class NotesFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
 
     NotesAdapter notesAdapter = new NotesAdapter();
+
+    notesAdapter.setItemClickHandler(noteId -> {
+      NotesFragmentDirections.Action_notesFragment_to_addNoteFragment action =
+          NotesFragmentDirections.action_notesFragment_to_addNoteFragment();
+      action.setNoteId(noteId);
+      Navigation.findNavController(view).navigate(action);
+    });
+
     mRecyclerView.setAdapter(notesAdapter);
 
     NotesViewModelFactory factory = InjectorUtils.provideNotesViewModelFactory(requireActivity());
@@ -48,14 +54,7 @@ public class NotesFragment extends Fragment {
     NotesViewModel viewModel =
         ViewModelProviders.of(requireActivity(), factory).get(NotesViewModel.class);
 
-    viewModel.getAllNotes().observe(this, noteEntities -> {
-      if (noteEntities != null) {
-        for (NoteEntity noteEntity : noteEntities) {
-          Log.d(TAG, "Note Creation date: " + noteEntity.getCreatedAt());
-        }
-      }
-      notesAdapter.setNoteEntities(noteEntities);
-    });
+    viewModel.getAllNotes().observe(this, notesAdapter::setNoteEntities);
 
     mAddNoteButton.setOnClickListener(
         Navigation.createNavigateOnClickListener(

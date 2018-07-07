@@ -1,5 +1,6 @@
 package com.razil.noteit.ui.addnote;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import com.razil.noteit.R;
 import com.razil.noteit.SingleLiveEvent;
@@ -40,5 +41,9 @@ public class AddNoteViewModel extends ViewModel {
 
     mNoteRepository.insert(noteEntity);
     mNoteAdded.call();
+  }
+
+  LiveData<NoteEntity> getNoteById(int noteId) {
+    return mNoteRepository.getNoteById(noteId);
   }
 }

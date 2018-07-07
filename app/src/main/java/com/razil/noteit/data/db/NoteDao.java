@@ -14,7 +14,7 @@ public interface NoteDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insert(NoteEntity noteEntity);
 
-  @Query("SELECT * FROM note")
+  @Query("SELECT * FROM note ORDER BY createdAt DESC")
   LiveData<List<NoteEntity>> getAllNotes();
 
   @Query("SELECT * FROM note WHERE id = :id")

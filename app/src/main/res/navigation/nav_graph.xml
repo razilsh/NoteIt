@@ -22,5 +22,11 @@
       android:id="@+id/addNoteFragment"
       android:name="com.razil.noteit.ui.addnote.AddNoteFragment"
       android:label="Notes"
-      tools:layout="@layout/fragment_add_note"/>
+      tools:layout="@layout/fragment_add_note">
+
+    <argument
+        android:name="noteId"
+        android:defaultValue="-1"
+        app:type="integer"/>
+  </fragment>
 </navigation>

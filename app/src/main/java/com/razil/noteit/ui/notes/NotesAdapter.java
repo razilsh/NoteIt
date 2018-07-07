@@ -1,6 +1,5 @@
 package com.razil.noteit.ui.notes;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,14 +14,18 @@ import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
   private List<NoteEntity> mNoteEntities;
-  private Context mContext;
+  private NotesAdapterItemClickHandler mItemClickHandler;
 
   public NotesAdapter() {
   }
 
-  public NotesAdapter(@NonNull Context context, @NonNull List<NoteEntity> noteEntities) {
-    mContext = context;
+  public NotesAdapter(@NonNull List<NoteEntity> noteEntities) {
     mNoteEntities = noteEntities;
+  }
+
+  public void setItemClickHandler(
+      NotesAdapterItemClickHandler mItemClickHandler) {
+    this.mItemClickHandler = mItemClickHandler;
   }
 
   public void setNoteEntities(List<NoteEntity> noteEntities) {
@@ -45,13 +48,27 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     return mNoteEntities != null ? mNoteEntities.size() : 0;
   }
 
-  class ViewHolder extends RecyclerView.ViewHolder {
+  /**
+   * Interface to handle click events on notes.
+   */
+  public interface NotesAdapterItemClickHandler {
+    void onItemClick(int noteId);
+  }
+
+  class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     @BindView(R.id.text_title) TextView textTitle;
     @BindView(R.id.text_description) TextView textDescription;
 
     ViewHolder(View view) {
       super(view);
       ButterKnife.bind(this, view);
+      view.setOnClickListener(this);
+    }
+
+    @Override public void onClick(View view) {
+      int adapterPosition = getAdapterPosition();
+      int noteId = mNoteEntities.get(adapterPosition).getId();
+      mItemClickHandler.onItemClick(noteId);
     }
   }
 }

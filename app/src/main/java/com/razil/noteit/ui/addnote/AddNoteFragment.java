@@ -1,5 +1,6 @@
 package com.razil.noteit.ui.addnote;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,14 +37,34 @@ public class AddNoteFragment extends Fragment {
     return view;
   }
 
-  @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+  @SuppressLint("RestrictedApi") @Override
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    // TODO : Refactor into separate methods?
 
     AddNoteViewModelFactory factory =
         InjectorUtils.provideAddNoteViewModelFactory(requireContext());
 
     AddNoteViewModel viewModel = ViewModelProviders.of(this, factory).get(AddNoteViewModel.class);
 
+    if (getArguments() != null) {
+      Integer noteId = AddNoteFragmentArgs.fromBundle(getArguments()).getNoteId();
+      if (noteId > 0) {
+        viewModel.getNoteById(noteId).observe(this, noteEntity -> {
+          if (noteEntity != null) {
+
+            mTextTitle.setText(noteEntity.getTitle());
+            mTextTitle.setEnabled(false);
+
+            mTextDescription.setText(noteEntity.getDescription());
+            mTextDescription.setEnabled(false);
+
+            mSaveNoteButton.setVisibility(View.GONE);
+          }
+        });
+      }
+    }
     viewModel.getSnackbarMessage().observe(this,
         (SnackbarMessage.SnackbarObserver) snackbarMessageResourceId -> Snackbar.make(view,
             getString(snackbarMessageResourceId), Snackbar.LENGTH_LONG).show());

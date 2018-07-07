@@ -12,4 +12,6 @@ public interface NoteRepository {
   void delete(NoteEntity noteEntity);
 
   LiveData<List<NoteEntity>> getAllNotes();
+
+  LiveData<NoteEntity> getNoteById(int noteId);
 }

@@ -31,4 +31,8 @@ public class NoteRepositoryImpl implements NoteRepository {
   @Override public LiveData<List<NoteEntity>> getAllNotes() {
     return mNoteDao.getAllNotes();
   }
+
+  @Override public LiveData<NoteEntity> getNoteById(int noteId) {
+    return mNoteDao.getNoteById(noteId);
+  }
 }
