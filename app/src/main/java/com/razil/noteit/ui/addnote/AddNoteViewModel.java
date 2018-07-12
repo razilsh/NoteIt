@@ -46,4 +46,9 @@ public class AddNoteViewModel extends ViewModel {
   LiveData<NoteEntity> getNoteById(int noteId) {
     return mNoteRepository.getNoteById(noteId);
   }
+
+  void updateNote(NoteEntity noteEntity) {
+    mNoteRepository.update(noteEntity);
+    mNoteAdded.call();
+  }
 }

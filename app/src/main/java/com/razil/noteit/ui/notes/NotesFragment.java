@@ -1,5 +1,6 @@
 package com.razil.noteit.ui.notes;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +19,7 @@ import com.razil.noteit.R;
 import com.razil.noteit.util.InjectorUtils;
 
 /**
- * Fragment that will display a list of all the notes with a button to add a note.
+ * Fragment that will display a list of all the notes and a button to add a note.
  */
 public class NotesFragment extends Fragment {
   private static final String TAG = NotesFragment.class.getSimpleName();
@@ -35,11 +36,13 @@ public class NotesFragment extends Fragment {
     return view;
   }
 
-  @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+  @SuppressLint("RestrictedApi") @Override
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    NotesAdapter notesAdapter = new NotesAdapter();
+    mAddNoteButton.animate().scaleX(1).scaleY(1).start();
 
+    NotesAdapter notesAdapter = new NotesAdapter();
     notesAdapter.setItemClickHandler(noteId -> {
       NotesFragmentDirections.Action_notesFragment_to_addNoteFragment action =
           NotesFragmentDirections.action_notesFragment_to_addNoteFragment();
@@ -50,10 +53,8 @@ public class NotesFragment extends Fragment {
     mRecyclerView.setAdapter(notesAdapter);
 
     NotesViewModelFactory factory = InjectorUtils.provideNotesViewModelFactory(requireActivity());
-
     NotesViewModel viewModel =
         ViewModelProviders.of(requireActivity(), factory).get(NotesViewModel.class);
-
     viewModel.getAllNotes().observe(this, notesAdapter::setNoteEntities);
 
     mAddNoteButton.setOnClickListener(
@@ -63,6 +64,7 @@ public class NotesFragment extends Fragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    mAddNoteButton.animate().scaleX(0).scaleY(0).start();
     unbinder.unbind();
   }
 }

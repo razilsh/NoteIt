@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAppBackground"
@@ -58,11 +59,30 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/margin_fab"
+      android:scaleX="0"
+      android:scaleY="0"
       android:src="@drawable/ic_check"
-      android:transitionName="@string/fab_transition"
       app:backgroundTint="@color/blackpearl"
       app:layout_anchor="@id/main_content"
       app:layout_anchorGravity="bottom|end"
+      tools:scaleX="1"
+      tools:scaleY="1"
+      tools:visibility="visible"
+      />
+  <android.support.design.widget.FloatingActionButton
+      android:id="@+id/button_edit_note"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/margin_fab"
+      android:scaleX="0"
+      android:scaleY="0"
+      android:src="@drawable/ic_edit"
+      android:visibility="gone"
+      app:backgroundTint="@color/blackpearl"
+      app:layout_anchor="@id/main_content"
+      app:layout_anchorGravity="bottom|end"
+      tools:scaleX="1"
+      tools:scaleY="1"
       />
 
 </android.support.design.widget.CoordinatorLayout>
