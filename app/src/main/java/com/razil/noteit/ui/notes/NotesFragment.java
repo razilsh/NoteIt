@@ -44,8 +44,8 @@ public class NotesFragment extends Fragment {
 
     NotesAdapter notesAdapter = new NotesAdapter();
     notesAdapter.setItemClickHandler(noteId -> {
-      NotesFragmentDirections.Action_notesFragment_to_addNoteFragment action =
-          NotesFragmentDirections.action_notesFragment_to_addNoteFragment();
+      NotesFragmentDirections.ActionNotesFragmentToAddNoteFragment action =
+          NotesFragmentDirections.actionNotesFragmentToAddNoteFragment();
       action.setNoteId(noteId);
       Navigation.findNavController(view).navigate(action);
     });

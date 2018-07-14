@@ -51,4 +51,9 @@ public class AddNoteViewModel extends ViewModel {
     mNoteRepository.update(noteEntity);
     mNoteAdded.call();
   }
+
+  void deleteNote(NoteEntity noteEntity) {
+    mNoteRepository.delete(noteEntity);
+    mNoteAdded.call();
+  }
 }
