@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.razil.noteit.R;
+import com.razil.noteit.ui.notes.NotesFragmentDirections.AddNoteAction;
 import com.razil.noteit.util.InjectorUtils;
 
 /**
@@ -44,13 +47,14 @@ public class NotesFragment extends Fragment {
 
     NotesAdapter notesAdapter = new NotesAdapter();
     notesAdapter.setItemClickHandler(noteId -> {
-      NotesFragmentDirections.ActionNotesFragmentToAddNoteFragment action =
-          NotesFragmentDirections.actionNotesFragmentToAddNoteFragment();
+      AddNoteAction action = NotesFragmentDirections.addNoteAction();
       action.setNoteId(noteId);
       Navigation.findNavController(view).navigate(action);
     });
 
     mRecyclerView.setAdapter(notesAdapter);
+    mRecyclerView.addItemDecoration(
+        new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL));
 
     NotesViewModelFactory factory = InjectorUtils.provideNotesViewModelFactory(requireActivity());
     NotesViewModel viewModel =
@@ -59,7 +63,7 @@ public class NotesFragment extends Fragment {
 
     mAddNoteButton.setOnClickListener(
         Navigation.createNavigateOnClickListener(
-            R.id.action_notesFragment_to_addNoteFragment));
+            R.id.addNoteAction));
   }
 
   @Override public void onDestroyView() {

@@ -25,6 +25,7 @@ import butterknife.Unbinder;
 import com.razil.noteit.R;
 import com.razil.noteit.data.db.NoteEntity;
 import com.razil.noteit.ui.SnackbarMessage;
+import com.razil.noteit.ui.deletenote.DeleteNoteDialogFragment;
 import com.razil.noteit.util.InjectorUtils;
 import java.util.List;
 
@@ -141,7 +142,6 @@ public class AddNoteFragment extends Fragment
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == mDeleteMenuItem.getItemId()) {
-      // TODO Confirm and delete this note
       DialogFragment dialogFragment = DeleteNoteDialogFragment.newInstance();
       dialogFragment.setTargetFragment(this, 112);
       dialogFragment.show(requireFragmentManager(), null);

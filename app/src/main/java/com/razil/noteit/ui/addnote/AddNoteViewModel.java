@@ -29,7 +29,7 @@ public class AddNoteViewModel extends ViewModel {
   }
 
   void addNote(String noteTitle, String noteDescription) {
-    if (Validator.isNullOrEmpty(noteTitle, noteDescription)) {
+    if (Validator.isNullOrEmpty(noteDescription)) {
       mSnackbarMessage.setValue(R.string.err_empty_note);
       return;
     }

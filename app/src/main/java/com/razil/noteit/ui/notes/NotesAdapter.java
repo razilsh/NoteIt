@@ -16,19 +16,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
   private List<NoteEntity> mNoteEntities;
   private NotesAdapterItemClickHandler mItemClickHandler;
 
-  public NotesAdapter() {
+  NotesAdapter() {
   }
 
   public NotesAdapter(@NonNull List<NoteEntity> noteEntities) {
     mNoteEntities = noteEntities;
   }
 
-  public void setItemClickHandler(
+  void setItemClickHandler(
       NotesAdapterItemClickHandler mItemClickHandler) {
     this.mItemClickHandler = mItemClickHandler;
   }
 
-  public void setNoteEntities(List<NoteEntity> noteEntities) {
+  void setNoteEntities(List<NoteEntity> noteEntities) {
     this.mNoteEntities = noteEntities;
     notifyDataSetChanged();
   }
@@ -40,7 +40,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
   @Override public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     NoteEntity noteEntity = mNoteEntities.get(position);
-    holder.textTitle.setText(noteEntity.getTitle());
+    if (noteEntity.getTitle().isEmpty()) {
+      holder.textTitle.setVisibility(View.GONE);
+    } else {
+      holder.textTitle.setVisibility(View.VISIBLE);
+      holder.textTitle.setText(noteEntity.getTitle());
+    }
     holder.textDescription.setText(noteEntity.getDescription());
   }
 

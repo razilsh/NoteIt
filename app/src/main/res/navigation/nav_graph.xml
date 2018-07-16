@@ -11,7 +11,7 @@
       android:label="Notes"
       tools:layout="@layout/fragment_notes">
     <action
-        android:id="@+id/action_notesFragment_to_addNoteFragment"
+        android:id="@+id/addNoteAction"
         app:destination="@id/addNoteFragment"
         app:enterAnim="@anim/fade_in"
         app:exitAnim="@anim/fade_out"
