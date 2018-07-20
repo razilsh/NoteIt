@@ -1,16 +1,23 @@
 package com.razil.noteit.ui.notes;
 
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.navigation.Navigation;
@@ -29,6 +36,12 @@ public class NotesFragment extends Fragment {
   Unbinder unbinder;
   @BindView(R.id.button_add_note) FloatingActionButton mAddNoteButton;
   @BindView(R.id.recyclerView_notes) RecyclerView mRecyclerView;
+  private NotesAdapter mNotesAdapter;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
 
   @Nullable @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -45,25 +58,56 @@ public class NotesFragment extends Fragment {
 
     mAddNoteButton.animate().scaleX(1).scaleY(1).start();
 
-    NotesAdapter notesAdapter = new NotesAdapter();
-    notesAdapter.setItemClickHandler(noteId -> {
+    mNotesAdapter = new NotesAdapter();
+    mNotesAdapter.setItemClickHandler(noteId -> {
       AddNoteAction action = NotesFragmentDirections.addNoteAction();
       action.setNoteId(noteId);
       Navigation.findNavController(view).navigate(action);
     });
 
-    mRecyclerView.setAdapter(notesAdapter);
+    mRecyclerView.setAdapter(mNotesAdapter);
     mRecyclerView.addItemDecoration(
         new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL));
 
     NotesViewModelFactory factory = InjectorUtils.provideNotesViewModelFactory(requireActivity());
     NotesViewModel viewModel =
         ViewModelProviders.of(requireActivity(), factory).get(NotesViewModel.class);
-    viewModel.getAllNotes().observe(this, notesAdapter::setNoteEntities);
+    viewModel.getAllNotes().observe(this, mNotesAdapter::setNoteEntities);
 
     mAddNoteButton.setOnClickListener(
         Navigation.createNavigateOnClickListener(
             R.id.addNoteAction));
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_home, menu);
+    FragmentActivity activity = requireActivity();
+    SearchManager searchManager =
+        (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
+    SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+    if (searchView != null && searchManager != null) {
+      searchView.setSearchableInfo(
+          searchManager.getSearchableInfo(activity.getComponentName()));
+      searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override public boolean onQueryTextSubmit(String s) {
+          mNotesAdapter.getFilter().filter(s);
+          return false;
+        }
+
+        @Override public boolean onQueryTextChange(String s) {
+          mNotesAdapter.getFilter().filter(s);
+          return false;
+        }
+      });
+    }
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_search) {
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onDestroyView() {

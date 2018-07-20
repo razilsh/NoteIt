@@ -2,18 +2,26 @@ package com.razil.noteit.ui.notes;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.razil.noteit.R;
 import com.razil.noteit.data.db.NoteEntity;
+import com.razil.noteit.util.Validator;
+import java.util.ArrayList;
 import java.util.List;
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> implements
+    Filterable {
+  private static final String TAG = NotesAdapter.class.getSimpleName();
   private List<NoteEntity> mNoteEntities;
+  private List<NoteEntity> mFilteredNoteEntities;
   private NotesAdapterItemClickHandler mItemClickHandler;
 
   NotesAdapter() {
@@ -21,6 +29,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
   public NotesAdapter(@NonNull List<NoteEntity> noteEntities) {
     mNoteEntities = noteEntities;
+    mFilteredNoteEntities = noteEntities;
   }
 
   void setItemClickHandler(
@@ -30,6 +39,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
   void setNoteEntities(List<NoteEntity> noteEntities) {
     this.mNoteEntities = noteEntities;
+    this.mFilteredNoteEntities = noteEntities;
     notifyDataSetChanged();
   }
 
@@ -39,7 +49,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
   }
 
   @Override public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    NoteEntity noteEntity = mNoteEntities.get(position);
+    NoteEntity noteEntity = mFilteredNoteEntities.get(position);
     if (noteEntity.getTitle().isEmpty()) {
       holder.textTitle.setVisibility(View.GONE);
     } else {
@@ -50,7 +60,40 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
   }
 
   @Override public int getItemCount() {
-    return mNoteEntities != null ? mNoteEntities.size() : 0;
+    return mFilteredNoteEntities != null && !mFilteredNoteEntities.isEmpty() ? mFilteredNoteEntities
+        .size() : 0;
+  }
+
+  @Override public Filter getFilter() {
+    return new Filter() {
+      @Override protected FilterResults performFiltering(CharSequence charSequence) {
+        String filterString = charSequence.toString();
+        if (Validator.isNullOrEmpty(filterString)) {
+          mFilteredNoteEntities = mNoteEntities;
+        } else {
+          List<NoteEntity> noteEntities = new ArrayList<>();
+          for (NoteEntity noteEntity : mNoteEntities) {
+            if (noteEntity.getTitle().contains(filterString) || noteEntity.getDescription()
+                .contains(filterString)) {
+              noteEntities.add(noteEntity);
+            }
+          }
+          mFilteredNoteEntities = noteEntities;
+        }
+        FilterResults results = new FilterResults();
+        results.values = mFilteredNoteEntities;
+        return results;
+      }
+
+      @Override
+      protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+        mFilteredNoteEntities = (List<NoteEntity>) filterResults.values;
+        for (NoteEntity noteEntity : mFilteredNoteEntities) {
+          Log.d(TAG, "publishResults: noteEntity = " + noteEntity.getTitle());
+        }
+        notifyDataSetChanged();
+      }
+    };
   }
 
   /**
