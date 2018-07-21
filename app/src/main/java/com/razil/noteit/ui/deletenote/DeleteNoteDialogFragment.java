@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+
 import com.razil.noteit.R;
 
 public class DeleteNoteDialogFragment extends DialogFragment {
@@ -16,7 +17,8 @@ public class DeleteNoteDialogFragment extends DialogFragment {
     void onActionPerformed(int action);
   }
 
-  @Override public void onAttach(Context context) {
+  @Override
+  public void onAttach(Context context) {
     super.onAttach(context);
     try {
       mUserActionListener = (UserActionListener) getTargetFragment();
@@ -29,16 +31,24 @@ public class DeleteNoteDialogFragment extends DialogFragment {
     return new DeleteNoteDialogFragment();
   }
 
-  @NonNull @Override public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-    return new AlertDialog.Builder(requireContext()).setTitle("Delete note?")
+  @NonNull
+  @Override
+  public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    return new AlertDialog.Builder(requireContext())
+        .setTitle("Delete note?")
         .setMessage(R.string.confirm_delete_note)
-        .setPositiveButton(R.string.delete, (dialogInterface, i) -> {
-          mUserActionListener.onActionPerformed(i);
-          dismiss();
-        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-          mUserActionListener.onActionPerformed(i);
-          dismiss();
-        })
+        .setPositiveButton(
+            R.string.delete,
+            (dialogInterface, i) -> {
+              mUserActionListener.onActionPerformed(i);
+              dismiss();
+            })
+        .setNegativeButton(
+            android.R.string.cancel,
+            (dialogInterface, i) -> {
+              mUserActionListener.onActionPerformed(i);
+              dismiss();
+            })
         .create();
   }
 }

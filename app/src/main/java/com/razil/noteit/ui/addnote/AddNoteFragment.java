@@ -17,17 +17,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import androidx.navigation.Navigation;
-import butterknife.BindView;
-import butterknife.BindViews;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+
 import com.razil.noteit.R;
 import com.razil.noteit.data.db.NoteEntity;
 import com.razil.noteit.ui.SnackbarMessage;
 import com.razil.noteit.ui.deletenote.DeleteNoteDialogFragment;
 import com.razil.noteit.util.InjectorUtils;
+
 import java.util.List;
+
+import androidx.navigation.Navigation;
+import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class AddNoteFragment extends Fragment
     implements DeleteNoteDialogFragment.UserActionListener {
@@ -37,23 +40,37 @@ public class AddNoteFragment extends Fragment
   private static final String TAG = "AddNoteFragment";
   private static final int ICON_VISIBILITY_DELAY = 150;
   Unbinder unbinder;
-  @BindView(R.id.button_save_note) FloatingActionButton mSaveNoteButton;
-  @BindView(R.id.text_title) EditText mTextTitle;
-  @BindView(R.id.text_description) EditText mTextDescription;
-  @BindView(R.id.button_edit_note) FloatingActionButton mEditNoteButton;
-  @BindViews({ R.id.text_title, R.id.text_description })
+
+  @BindView(R.id.button_save_note)
+  FloatingActionButton mSaveNoteButton;
+
+  @BindView(R.id.text_title)
+  EditText mTextTitle;
+
+  @BindView(R.id.text_description)
+  EditText mTextDescription;
+
+  @BindView(R.id.button_edit_note)
+  FloatingActionButton mEditNoteButton;
+
+  @BindViews({R.id.text_title, R.id.text_description})
   List<View> mTextViews;
+
   private NoteEntity mNoteEntity;
   private MenuItem mDeleteMenuItem;
   private AddNoteViewModel mAddNoteviewModel;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
   }
 
-  @Nullable @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+  @Nullable
+  @Override
+  public View onCreateView(
+      @NonNull LayoutInflater inflater,
+      @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
 
     View view = inflater.inflate(R.layout.fragment_add_note, container, false);
@@ -61,7 +78,8 @@ public class AddNoteFragment extends Fragment
     return view;
   }
 
-  @SuppressLint("RestrictedApi") @Override
+  @SuppressLint("RestrictedApi")
+  @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -76,57 +94,70 @@ public class AddNoteFragment extends Fragment
     if (getArguments() != null) {
       Integer noteId = AddNoteFragmentArgs.fromBundle(getArguments()).getNoteId();
       if (noteId > 0) {
-        mAddNoteviewModel.getNoteById(noteId).observe(this, noteEntity -> {
-          if (noteEntity != null) {
-            mNoteEntity = noteEntity;
-            ButterKnife.apply(mTextViews, DISABLE);
-            mTextTitle.setText(noteEntity.getTitle());
-            mTextDescription.setText(noteEntity.getDescription());
-            mSaveNoteButton.setVisibility(View.GONE);
-            mEditNoteButton.setVisibility(View.VISIBLE);
-            mEditNoteButton.animate().scaleX(1).scaleY(1).start();
+        mAddNoteviewModel
+            .getNoteById(noteId)
+            .observe(
+                this,
+                noteEntity -> {
+                  if (noteEntity != null) {
+                    mNoteEntity = noteEntity;
+                    ButterKnife.apply(mTextViews, DISABLE);
+                    mTextTitle.setText(noteEntity.getTitle());
+                    mTextDescription.setText(noteEntity.getDescription());
+                    mSaveNoteButton.setVisibility(View.GONE);
+                    mEditNoteButton.setVisibility(View.VISIBLE);
+                    mEditNoteButton.animate().scaleX(1).scaleY(1).start();
 
-            if (mDeleteMenuItem != null) {
-              mDeleteMenuItem.setVisible(true);
-            }
-          }
-        });
+                    if (mDeleteMenuItem != null) {
+                      mDeleteMenuItem.setVisible(true);
+                    }
+                  }
+                });
       }
     }
 
-    mAddNoteviewModel.getSnackbarMessage().observe(this,
-        (SnackbarMessage.SnackbarObserver) snackbarMessageResourceId -> Snackbar.make(view,
-            getString(snackbarMessageResourceId), Snackbar.LENGTH_LONG).show());
-    mAddNoteviewModel.getNoteAdded()
+    mAddNoteviewModel
+        .getSnackbarMessage()
+        .observe(
+            this,
+            (SnackbarMessage.SnackbarObserver)
+                snackbarMessageResourceId ->
+                    Snackbar.make(view, getString(snackbarMessageResourceId), Snackbar.LENGTH_LONG)
+                        .show());
+    mAddNoteviewModel
+        .getNoteAdded()
         .observe(this, aVoid -> Navigation.findNavController(view).popBackStack());
 
-    mSaveNoteButton.setOnClickListener(v -> {
+    mSaveNoteButton.setOnClickListener(
+        v -> {
+          if (mNoteEntity != null) {
+            mNoteEntity.setTitle(mTextTitle.getText().toString());
+            mNoteEntity.setDescription(mTextDescription.getText().toString());
+            mAddNoteviewModel.updateNote(mNoteEntity);
+          } else {
+            mAddNoteviewModel.addNote(
+                mTextTitle.getText().toString(), mTextDescription.getText().toString());
+          }
+        });
 
-      if (mNoteEntity != null) {
-        mNoteEntity.setTitle(mTextTitle.getText().toString());
-        mNoteEntity.setDescription(mTextDescription.getText().toString());
-        mAddNoteviewModel.updateNote(mNoteEntity);
-      } else {
-        mAddNoteviewModel.addNote(mTextTitle.getText().toString(),
-            mTextDescription.getText().toString());
-      }
-    });
-
-    mEditNoteButton.setOnClickListener(v -> {
-      ButterKnife.apply(mTextViews, ENABLE);
-      mEditNoteButton.setVisibility(View.GONE);
-      mSaveNoteButton.setVisibility(View.VISIBLE);
-    });
+    mEditNoteButton.setOnClickListener(
+        v -> {
+          ButterKnife.apply(mTextViews, ENABLE);
+          mEditNoteButton.setVisibility(View.GONE);
+          mSaveNoteButton.setVisibility(View.VISIBLE);
+        });
   }
 
-  @Override public void onDestroyView() {
+  @Override
+  public void onDestroyView() {
     super.onDestroyView();
     mSaveNoteButton.animate().scaleX(0).scaleY(0).start();
     mEditNoteButton.animate().scaleX(0).scaleY(0).start();
     unbinder.unbind();
   }
 
-  @Override public void onPrepareOptionsMenu(Menu menu) {
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
     mDeleteMenuItem = menu.findItem(R.id.action_delete);
     if (mDeleteMenuItem != null) {
@@ -135,12 +166,14 @@ public class AddNoteFragment extends Fragment
     }
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_add_note, menu);
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == mDeleteMenuItem.getItemId()) {
       DialogFragment dialogFragment = DeleteNoteDialogFragment.newInstance();
       dialogFragment.setTargetFragment(this, 112);
@@ -150,7 +183,8 @@ public class AddNoteFragment extends Fragment
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void onActionPerformed(int action) {
+  @Override
+  public void onActionPerformed(int action) {
     if (action == AlertDialog.BUTTON_POSITIVE) {
       mAddNoteviewModel.deleteNote(mNoteEntity);
     }

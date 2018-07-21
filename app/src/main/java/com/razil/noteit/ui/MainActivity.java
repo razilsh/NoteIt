@@ -8,19 +8,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.razil.noteit.R;
+
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.razil.noteit.R;
 
 public class MainActivity extends AppCompatActivity {
 
-  @BindView(R.id.toolbar) Toolbar toolbar;
-  @BindView(R.id.nav_view) NavigationView navView;
-  @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
+  @BindView(R.id.toolbar)
+  Toolbar toolbar;
+
+  @BindView(R.id.nav_view)
+  NavigationView navView;
+
+  @BindView(R.id.drawer_layout)
+  DrawerLayout drawerLayout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +64,14 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    return NavigationUI.onNavDestinationSelected(item,
-        Navigation.findNavController(this, R.id.nav_host_fragment))
+    return NavigationUI.onNavDestinationSelected(
+            item, Navigation.findNavController(this, R.id.nav_host_fragment))
         || super.onOptionsItemSelected(item);
   }
 
   @Override
   public boolean onSupportNavigateUp() {
-    return NavigationUI.navigateUp(drawerLayout,
-        Navigation.findNavController(this, R.id.nav_host_fragment));
+    return NavigationUI.navigateUp(
+        drawerLayout, Navigation.findNavController(this, R.id.nav_host_fragment));
   }
 }

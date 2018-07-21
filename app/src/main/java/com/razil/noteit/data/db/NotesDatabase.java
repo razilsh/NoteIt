@@ -6,7 +6,9 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-@Database(entities = { NoteEntity.class }, version = 1)
+@Database(
+    entities = {NoteEntity.class},
+    version = 1)
 @TypeConverters(DateConverter.class)
 public abstract class NotesDatabase extends RoomDatabase {
 
@@ -20,7 +22,7 @@ public abstract class NotesDatabase extends RoomDatabase {
         if (sInstance == null) {
           sInstance =
               Room.databaseBuilder(
-                  context.getApplicationContext(), NotesDatabase.class, DATABASE_NAME)
+                      context.getApplicationContext(), NotesDatabase.class, DATABASE_NAME)
                   .build();
         }
       }

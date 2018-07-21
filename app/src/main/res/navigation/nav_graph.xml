@@ -5,28 +5,28 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/notesFragment">
 
-  <fragment
-      android:id="@+id/notesFragment"
-      android:name="com.razil.noteit.ui.notes.NotesFragment"
-      android:label="Notes"
-      tools:layout="@layout/fragment_notes">
-    <action
-        android:id="@+id/addNoteAction"
-        app:destination="@id/addNoteFragment"
-        app:enterAnim="@anim/fade_in"
-        app:exitAnim="@anim/fade_out"
-        app:popEnterAnim="@anim/fade_in"
-        app:popExitAnim="@anim/fade_out"/>
-  </fragment>
-  <fragment
-      android:id="@+id/addNoteFragment"
-      android:name="com.razil.noteit.ui.addnote.AddNoteFragment"
-      android:label="Notes"
-      tools:layout="@layout/fragment_add_note">
+    <fragment
+        android:id="@+id/notesFragment"
+        android:name="com.razil.noteit.ui.notes.NotesFragment"
+        android:label="Notes"
+        tools:layout="@layout/fragment_notes">
+        <action
+            android:id="@+id/addNoteAction"
+            app:destination="@id/addNoteFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNoteFragment"
+        android:name="com.razil.noteit.ui.addnote.AddNoteFragment"
+        android:label="Notes"
+        tools:layout="@layout/fragment_add_note">
 
-    <argument
-        android:name="noteId"
-        android:defaultValue="-1"
-        app:type="integer"/>
-  </fragment>
+        <argument
+            android:name="noteId"
+            android:defaultValue="-1"
+            app:type="integer" />
+    </fragment>
 </navigation>

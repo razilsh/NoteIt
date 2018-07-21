@@ -1,7 +1,9 @@
 package com.razil.noteit.data.repo;
 
 import android.arch.lifecycle.LiveData;
+
 import com.razil.noteit.data.db.NoteEntity;
+
 import java.util.List;
 
 public interface NoteRepository {

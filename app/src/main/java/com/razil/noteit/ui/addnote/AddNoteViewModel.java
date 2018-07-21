@@ -2,12 +2,14 @@ package com.razil.noteit.ui.addnote;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
+
 import com.razil.noteit.R;
 import com.razil.noteit.SingleLiveEvent;
 import com.razil.noteit.data.db.NoteEntity;
 import com.razil.noteit.data.repo.NoteRepository;
 import com.razil.noteit.ui.SnackbarMessage;
 import com.razil.noteit.util.Validator;
+
 import java.util.Calendar;
 
 public class AddNoteViewModel extends ViewModel {

@@ -1,7 +1,7 @@
-
 package com.razil.noteit.data.db;
 
 import android.arch.persistence.room.TypeConverter;
+
 import java.util.Date;
 
 /**
