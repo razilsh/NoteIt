@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.razil.noteit.R;
 import com.razil.noteit.ui.notes.NotesFragmentDirections.AddNoteAction;
@@ -112,6 +113,9 @@ public class NotesFragment extends Fragment {
             }
           });
     }
+
+    MenuItem sortItem = menu.findItem(R.id.action_sort);
+    inflater.inflate(R.menu.sub_menu_sort, sortItem.getSubMenu());
   }
 
   @Override
@@ -119,6 +123,16 @@ public class NotesFragment extends Fragment {
     if (item.getItemId() == R.id.action_search) {
       return true;
     }
+
+    if (item.getItemId() == R.id.action_sort_newest) {
+      mNotesAdapter.sortNotes(false);
+    }
+
+    if (item.getItemId() == R.id.action_sort_oldest) {
+      Toast.makeText(requireContext(), "oldest", Toast.LENGTH_SHORT).show();
+      mNotesAdapter.sortNotes(true);
+    }
+
     return super.onOptionsItemSelected(item);
   }
 

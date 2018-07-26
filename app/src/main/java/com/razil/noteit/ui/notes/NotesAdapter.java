@@ -15,6 +15,7 @@ import com.razil.noteit.data.db.NoteEntity;
 import com.razil.noteit.util.Validator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,6 +42,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
   void setNoteEntities(List<NoteEntity> noteEntities) {
     this.mNoteEntities = noteEntities;
     this.mFilteredNoteEntities = noteEntities;
+    notifyDataSetChanged();
+  }
+
+  void sortNotes(boolean desc) {
+    Collections.sort(
+        mFilteredNoteEntities,
+        (noteEntity, t1) ->
+            desc
+                ? noteEntity.getCreatedAt().compareTo(t1.getCreatedAt())
+                : t1.getCreatedAt().compareTo(noteEntity.getCreatedAt()));
+
     notifyDataSetChanged();
   }
 
