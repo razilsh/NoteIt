@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.razil.noteit.R;
@@ -41,6 +42,9 @@ public class NotesFragment extends Fragment {
 
   @BindView(R.id.recyclerView_notes)
   RecyclerView mRecyclerView;
+
+  @BindView(R.id.textNoNotes)
+  TextView textNoNotes;
 
   private NotesAdapter mNotesAdapter;
 
@@ -78,13 +82,27 @@ public class NotesFragment extends Fragment {
         });
 
     mRecyclerView.setAdapter(mNotesAdapter);
+    mRecyclerView.setHasFixedSize(true);
     mRecyclerView.addItemDecoration(
         new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL));
 
     NotesViewModelFactory factory = InjectorUtils.provideNotesViewModelFactory(requireActivity());
     NotesViewModel viewModel =
         ViewModelProviders.of(requireActivity(), factory).get(NotesViewModel.class);
-    viewModel.getAllNotes().observe(this, mNotesAdapter::setNoteEntities);
+    viewModel
+        .getAllNotes()
+        .observe(
+            this,
+            noteEntities -> {
+              if (noteEntities != null && noteEntities.size() > 0) {
+                textNoNotes.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+              } else {
+                textNoNotes.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+              }
+              mNotesAdapter.setNoteEntities(noteEntities);
+            });
 
     mAddNoteButton.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.addNoteAction));
   }

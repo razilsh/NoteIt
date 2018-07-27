@@ -27,6 +27,6 @@
         <argument
             android:name="noteId"
             android:defaultValue="-1"
-            app:type="integer" />
+            app:argType="integer" />
     </fragment>
 </navigation>
