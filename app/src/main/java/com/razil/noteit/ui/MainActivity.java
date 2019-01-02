@@ -9,12 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.razil.noteit.R;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+
+import com.razil.noteit.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -72,6 +73,6 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onSupportNavigateUp() {
     return NavigationUI.navigateUp(
-        drawerLayout, Navigation.findNavController(this, R.id.nav_host_fragment));
+        Navigation.findNavController(this, R.id.nav_host_fragment), drawerLayout);
   }
 }
