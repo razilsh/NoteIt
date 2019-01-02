@@ -16,25 +16,20 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.razil.noteit.R;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class MainActivity extends AppCompatActivity {
 
-  @BindView(R.id.toolbar)
   Toolbar toolbar;
-
-  @BindView(R.id.nav_view)
   NavigationView navView;
-
-  @BindView(R.id.drawer_layout)
   DrawerLayout drawerLayout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    ButterKnife.bind(this);
+
+    toolbar = findViewById(R.id.toolbar);
+    navView = findViewById(R.id.nav_view);
+    drawerLayout = findViewById(R.id.drawer_layout);
 
     setSupportActionBar(toolbar);
     ActionBar actionBar = getSupportActionBar();

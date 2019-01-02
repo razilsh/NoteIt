@@ -18,9 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
     implements Filterable {
   private static final String TAG = NotesAdapter.class.getSimpleName();
@@ -120,15 +117,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>
   }
 
   class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    @BindView(R.id.text_title)
     TextView textTitle;
-
-    @BindView(R.id.text_description)
     TextView textDescription;
 
     ViewHolder(View view) {
       super(view);
-      ButterKnife.bind(this, view);
+      textTitle = view.findViewById(R.id.text_title);
+      textDescription = view.findViewById(R.id.text_description);
       view.setOnClickListener(this);
     }
 

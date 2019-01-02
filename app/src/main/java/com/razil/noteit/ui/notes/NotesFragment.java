@@ -23,27 +23,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.navigation.Navigation;
+
 import com.razil.noteit.R;
 import com.razil.noteit.ui.notes.NotesFragmentDirections.AddNoteAction;
 import com.razil.noteit.util.InjectorUtils;
 
-import androidx.navigation.Navigation;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /** Fragment that will display a list of all the notes and a button to add a note. */
 public class NotesFragment extends Fragment {
   private static final String TAG = NotesFragment.class.getSimpleName();
-  Unbinder unbinder;
 
-  @BindView(R.id.button_add_note)
   FloatingActionButton mAddNoteButton;
 
-  @BindView(R.id.recyclerView_notes)
   RecyclerView mRecyclerView;
 
-  @BindView(R.id.textNoNotes)
   TextView textNoNotes;
 
   private NotesAdapter mNotesAdapter;
@@ -62,7 +55,9 @@ public class NotesFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
 
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
-    unbinder = ButterKnife.bind(this, view);
+    mAddNoteButton = view.findViewById(R.id.button_add_note);
+    mRecyclerView = view.findViewById(R.id.recyclerView_notes);
+    textNoNotes = view.findViewById(R.id.textNoNotes);
     return view;
   }
 
@@ -158,6 +153,5 @@ public class NotesFragment extends Fragment {
   public void onDestroyView() {
     super.onDestroyView();
     mAddNoteButton.animate().scaleX(0).scaleY(0).start();
-    unbinder.unbind();
   }
 }

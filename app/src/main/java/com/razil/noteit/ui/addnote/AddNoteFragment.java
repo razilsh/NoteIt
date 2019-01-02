@@ -18,43 +18,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.navigation.Navigation;
+
 import com.razil.noteit.R;
 import com.razil.noteit.data.db.NoteEntity;
 import com.razil.noteit.ui.SnackbarMessage;
 import com.razil.noteit.ui.deletenote.DeleteNoteDialogFragment;
 import com.razil.noteit.util.InjectorUtils;
 
-import java.util.List;
-
-import androidx.navigation.Navigation;
-import butterknife.BindView;
-import butterknife.BindViews;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 public class AddNoteFragment extends Fragment
     implements DeleteNoteDialogFragment.UserActionListener {
-  static final ButterKnife.Action<View> DISABLE = (view, index) -> view.setEnabled(false);
-  static final ButterKnife.Action<View> ENABLE = (view, index) -> view.setEnabled(true);
 
   private static final String TAG = "AddNoteFragment";
   private static final int ICON_VISIBILITY_DELAY = 150;
-  Unbinder unbinder;
 
-  @BindView(R.id.button_save_note)
   FloatingActionButton mSaveNoteButton;
-
-  @BindView(R.id.text_title)
   EditText mTextTitle;
-
-  @BindView(R.id.text_description)
   EditText mTextDescription;
-
-  @BindView(R.id.button_edit_note)
   FloatingActionButton mEditNoteButton;
-
-  @BindViews({R.id.text_title, R.id.text_description})
-  List<View> mTextViews;
 
   private NoteEntity mNoteEntity;
   private MenuItem mDeleteMenuItem;
@@ -74,7 +55,10 @@ public class AddNoteFragment extends Fragment
       @Nullable Bundle savedInstanceState) {
 
     View view = inflater.inflate(R.layout.fragment_add_note, container, false);
-    unbinder = ButterKnife.bind(this, view);
+    mSaveNoteButton = view.findViewById(R.id.button_save_note);
+    mTextTitle = view.findViewById(R.id.text_title);
+    mTextDescription = view.findViewById(R.id.text_description);
+    mEditNoteButton = view.findViewById(R.id.button_edit_note);
     return view;
   }
 
@@ -101,7 +85,8 @@ public class AddNoteFragment extends Fragment
                 noteEntity -> {
                   if (noteEntity != null) {
                     mNoteEntity = noteEntity;
-                    ButterKnife.apply(mTextViews, DISABLE);
+                    mTextTitle.setEnabled(false);
+                    mTextDescription.setEnabled(false);
                     mTextTitle.setText(noteEntity.getTitle());
                     mTextDescription.setText(noteEntity.getDescription());
                     mSaveNoteButton.setVisibility(View.GONE);
@@ -142,7 +127,8 @@ public class AddNoteFragment extends Fragment
 
     mEditNoteButton.setOnClickListener(
         v -> {
-          ButterKnife.apply(mTextViews, ENABLE);
+          mTextTitle.setEnabled(true);
+          mTextDescription.setEnabled(true);
           mEditNoteButton.setVisibility(View.GONE);
           mSaveNoteButton.setVisibility(View.VISIBLE);
         });
@@ -153,7 +139,6 @@ public class AddNoteFragment extends Fragment
     super.onDestroyView();
     mSaveNoteButton.animate().scaleX(0).scaleY(0).start();
     mEditNoteButton.animate().scaleX(0).scaleY(0).start();
-    unbinder.unbind();
   }
 
   @Override
